@@ -1,12 +1,8 @@
-// maniEd Website - Main JavaScript File
-// Handles all interactive functionality, animations, and user interactions
 
-// Global variables
 let isChatOpen = false;
 let currentFilter = 'all';
 let currentCategory = 'all';
 
-// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeAnimations();
     initializeParticles();
@@ -17,9 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeScrollAnimations();
 });
 
-// Animation and reveal system
 function initializeAnimations() {
-    // Intersection Observer for reveal animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -33,13 +27,11 @@ function initializeAnimations() {
         });
     }, observerOptions);
 
-    // Observe all reveal elements
     document.querySelectorAll('.reveal-element').forEach(el => {
         observer.observe(el);
     });
 }
 
-// Particle background system
 function initializeParticles() {
     const particleContainer = document.getElementById('particle-container');
     if (!particleContainer) return;
@@ -47,24 +39,20 @@ function initializeParticles() {
     function createParticle() {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        
-        // Random size and position
+
         const size = Math.random() * 4 + 2;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         particle.style.left = Math.random() * 100 + '%';
-        
-        // Random animation duration
+
         const duration = Math.random() * 3 + 5;
         particle.style.animationDuration = duration + 's';
-        
-        // Random delay
+
         const delay = Math.random() * 2;
         particle.style.animationDelay = delay + 's';
         
         particleContainer.appendChild(particle);
-        
-        // Remove particle after animation
+
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
@@ -72,24 +60,20 @@ function initializeParticles() {
         }, (duration + delay) * 1000);
     }
 
-    // Create particles periodically
     setInterval(createParticle, 300);
-    
-    // Create initial particles
+
     for (let i = 0; i < 20; i++) {
         setTimeout(createParticle, i * 100);
     }
 }
 
-// Navigation functionality
 function initializeNavigation() {
-    // Mobile menu toggle
+
     const mobileMenuButton = document.querySelector('.md\\:hidden button');
     if (mobileMenuButton) {
         mobileMenuButton.addEventListener('click', toggleMobileMenu);
     }
 
-    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -105,18 +89,16 @@ function initializeNavigation() {
 }
 
 function toggleMobileMenu() {
-    // Mobile menu implementation
+
     console.log('Mobile menu toggled');
 }
 
-// Form handling
 function initializeForms() {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactForm);
     }
 
-    // Add form validation for all forms
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', validateForm);
     });
@@ -129,23 +111,18 @@ function handleContactForm(e) {
     const submitButton = form.querySelector('button[type="submit"]');
     const spinner = submitButton.querySelector('.loading-spinner');
     const buttonText = submitButton.querySelector('span');
-    
-    // Show loading state
+
     submitButton.disabled = true;
     spinner.style.display = 'block';
     buttonText.textContent = 'Sending...';
-    
-    // Simulate form submission
+
     setTimeout(() => {
-        // Hide loading state
         submitButton.disabled = false;
         spinner.style.display = 'none';
         buttonText.textContent = 'Send Message';
         
-        // Show success message
         showMessage('success', 'Thank you! Your message has been sent successfully. We\'ll get back to you within 24 hours.');
         
-        // Reset form
         form.reset();
     }, 2000);
 }
@@ -175,23 +152,20 @@ function showMessage(type, message) {
     if (messageElement) {
         messageElement.querySelector('span').textContent = message;
         messageElement.style.display = 'block';
-        
-        // Hide after 5 seconds
+
         setTimeout(() => {
             messageElement.style.display = 'none';
         }, 5000);
     }
 }
 
-// FAQ functionality
 function initializeFAQ() {
-    // Search functionality
+
     const searchInput = document.getElementById('faq-search');
     if (searchInput) {
         searchInput.addEventListener('input', handleFAQSearch);
     }
-    
-    // Category filtering
+
     const categoryTabs = document.querySelectorAll('.category-tab');
     categoryTabs.forEach(tab => {
         tab.addEventListener('click', handleCategoryFilter);
@@ -202,8 +176,7 @@ function toggleAccordion(header) {
     const accordionItem = header.parentElement;
     const content = accordionItem.querySelector('.accordion-content');
     const icon = header.querySelector('.accordion-icon');
-    
-    // Close all other accordions
+
     document.querySelectorAll('.accordion-item').forEach(item => {
         if (item !== accordionItem) {
             item.querySelector('.accordion-content').classList.remove('active');
@@ -211,8 +184,7 @@ function toggleAccordion(header) {
             item.querySelector('.accordion-icon').classList.remove('active');
         }
     });
-    
-    // Toggle current accordion
+
     content.classList.toggle('active');
     header.classList.toggle('active');
     icon.classList.toggle('active');
@@ -231,8 +203,7 @@ function handleFAQSearch(e) {
         if (question.includes(searchTerm) || content.includes(searchTerm)) {
             item.classList.remove('hidden');
             visibleCount++;
-            
-            // Highlight search terms
+
             if (searchTerm) {
                 highlightSearchTerms(item, searchTerm);
             } else {
@@ -242,8 +213,7 @@ function handleFAQSearch(e) {
             item.classList.add('hidden');
         }
     });
-    
-    // Show/hide no results message
+
     if (visibleCount === 0 && searchTerm) {
         noResults.classList.remove('hidden');
     } else {
@@ -254,14 +224,12 @@ function handleFAQSearch(e) {
 function handleCategoryFilter(e) {
     const category = e.target.dataset.category;
     const faqItems = document.querySelectorAll('.faq-item');
-    
-    // Update active tab
+
     document.querySelectorAll('.category-tab').forEach(tab => {
         tab.classList.remove('active');
     });
     e.target.classList.add('active');
-    
-    // Filter FAQ items
+
     faqItems.forEach(item => {
         if (category === 'all' || item.dataset.category === category) {
             item.classList.remove('hidden');
@@ -299,7 +267,6 @@ function clearSearch() {
     }
 }
 
-// Feature filtering (for features page)
 function initializeFeatureFilters() {
     const filterTabs = document.querySelectorAll('.filter-tab');
     filterTabs.forEach(tab => {
@@ -310,14 +277,12 @@ function initializeFeatureFilters() {
 function handleFeatureFilter(e) {
     const filter = e.target.dataset.filter;
     const featureCards = document.querySelectorAll('.feature-card');
-    
-    // Update active tab
+
     document.querySelectorAll('.filter-tab').forEach(tab => {
         tab.classList.remove('active');
     });
     e.target.classList.add('active');
-    
-    // Filter feature cards
+
     featureCards.forEach(card => {
         if (filter === 'all' || card.dataset.category === filter) {
             card.classList.remove('hidden');
@@ -329,7 +294,6 @@ function handleFeatureFilter(e) {
     currentFilter = filter;
 }
 
-// Chat widget functionality
 function toggleChat() {
     if (window.botpress && window.botpress.webchat) {
         if (isChatOpen) {
@@ -340,14 +304,11 @@ function toggleChat() {
             isChatOpen = true;
         }
     } else {
-        // Fallback - show chat not available message
         alert('Chat is currently unavailable. Please try again later or contact us via email.');
     }
 }
 
-// Scroll animations
 function initializeScrollAnimations() {
-    // Add parallax effect to hero sections
     window.addEventListener('scroll', handleScrollAnimations);
 }
 
@@ -362,7 +323,6 @@ function handleScrollAnimations() {
     });
 }
 
-// Utility functions
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -388,9 +348,7 @@ function throttle(func, limit) {
     };
 }
 
-// Performance optimization
 function initializePerformanceOptimizations() {
-    // Lazy load images
     const images = document.querySelectorAll('img[data-src]');
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
@@ -404,8 +362,7 @@ function initializePerformanceOptimizations() {
     });
     
     images.forEach(img => imageObserver.observe(img));
-    
-    // Preload critical resources
+
     preloadCriticalResources();
 }
 
@@ -425,29 +382,21 @@ function preloadCriticalResources() {
     });
 }
 
-// Error handling
 window.addEventListener('error', function(e) {
     console.error('JavaScript error:', e.error);
-    // Could send to error tracking service
 });
 
-// Analytics and tracking
 function trackEvent(eventName, properties = {}) {
-    // Placeholder for analytics tracking
     console.log('Event tracked:', eventName, properties);
 }
 
-// Accessibility enhancements
 function initializeAccessibility() {
-    // Add keyboard navigation support
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            // Close any open modals or dropdowns
             closeAllModals();
         }
     });
-    
-    // Add focus management
+
     const focusableElements = document.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
@@ -464,19 +413,16 @@ function initializeAccessibility() {
 }
 
 function closeAllModals() {
-    // Close any open modals, dropdowns, etc.
     if (isChatOpen) {
         toggleChat();
     }
 }
 
-// Initialize accessibility features
 document.addEventListener('DOMContentLoaded', function() {
     initializeAccessibility();
     initializePerformanceOptimizations();
 });
 
-// Export functions for global access
 window.maniEd = {
     toggleChat,
     toggleAccordion,
